@@ -11,6 +11,7 @@ from sqlalchemy import create_engine
 Session = sessionmaker(bind=engine)
 session = Session()
 
+
 @bottle.route("/restaurant")
 def restaurant():
     query = session.query(Restaurant).all()
@@ -20,7 +21,6 @@ def restaurant():
 
     s += "\n<a href='/restaurant/new'>Create New Restaurant</a>"
     return s
-
 
 
 @bottle.route("/delete/<name>")
@@ -73,6 +73,7 @@ def confirm_edit_restaurant(id):
     target.name = new_name
     session.commit()
     bottle.redirect("/restaurant")
+
 
 
 #print all rows
