@@ -1,12 +1,36 @@
-<html>
 <!--
 variables passed to template:
 ----------------------------
 restaurant
+items
  -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+  <title>{{restaurant.name}} Menu</title>
+</head>
 <body>
+  <div class="grid-container">
+    <span id="logo">LOGO</span>
+    <nav>NAVIGATION</nav>
+    <aside>ASIDE</aside>
+    <main>
 
-<h1>{{restaurant.name}} Menu</h1>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+
+<ul>
+    {% for message in messages %}
+        <li> <strong> {{ message }} </strong> </li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
 
 <P> <a href="{{url_for('new_menu_item', restaurant_id = restaurant.id)}}"> ADD NEW MENU ITEM </a> </p>
 
@@ -23,8 +47,14 @@ restaurant
 
 
 {% endfor %}
+</main>
+    <section>ADVERTISING</section>
+    <footer>FOOTER</footer>
+    <header>    <h1>{{restaurant.name}} Menu</h1>
+</header>
+  </div>
 </body>
-
 </html>
+
 
 

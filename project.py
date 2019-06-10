@@ -112,7 +112,7 @@ def delete_menu_item(restaurant_id, menu_id):
                                # menu_item=menu_item)
 
         return f"""
-<form action = "/restaurant/{restaurant_id}/{menu_id}/delete" form = "POST">
+<form action = "/restaurant/{restaurant_id}/{menu_id}/delete" method = "POST">
 <a href="/restaurant/{restaurant_id}/{menu_id}/delete"><input type='button' value='CONFIRM DELETE'></a>
 </form>
         """
@@ -129,16 +129,19 @@ def export():
     spreadsheet.del_worksheet(r_sheet)
     spreadsheet.del_worksheet(m_sheet)
 
-    r_sheet = spreadsheet.add_worksheet("restaurants", 1000, 5)
-    m_sheet = spreadsheet.add_worksheet("menu_items", 1000, 5)
+    r_sheet = spreadsheet.add_worksheet("restaurants", 1, 2)
+    m_sheet = spreadsheet.add_worksheet("menu_items", 1, 5)
+
+    r_sheet.insert_row(["name", "id"], 1)
+    m_sheet.insert_row(["name", "id", "price", "description", "restaurant_id"], 1)
 
     for row in session.query(Restaurant).all():
-        new_row = [row.name, row.id]
-        r_sheet.insert_row(new_row)
+        new_row = [row.name, "restaurantid"+str(row.id)]
+        r_sheet.append_row(new_row)
 
     for row in session.query(MenuItem).all():
-        new_row = [row.name, row.id, row.price, row.description, row.restaurant_id]
-        m_sheet.insert_row(new_row)
+        new_row = [row.name, "menuid"+str(row.id), row.price, row.description, "restaurantid"+str(row.restaurant_id)]
+        m_sheet.append_row(new_row)
 
     return "EXPORT SUCCESSFUL"
 
