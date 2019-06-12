@@ -1,15 +1,34 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+  <title>New Menu Item</title>
+</head>
 <body>
+  <div class="grid-container">
+    <span id="logo"><a href=" {{ url_for("all_restaurants") }} ">LOGO</a></span>
+    <nav>NAVIGATION</nav>
+    <aside>ASIDE</aside>
+    <main>
+        <form action = "{{ url_for('new_menu_item', restaurant_id=restaurant.id)}}" method = 'POST'>
 
-<h1>New Menu Item</h1>
+            New Menu Item Name:
+            <input type='text' size='30' name='name'/><br/>
+            Price:
+            <input type='text' size='15' name='price' value="$0"/><br/>
+            Description:<br/>
+            <textarea cols='45' rows="5" name='description'>Toasty!</textarea>
+            <input type='submit' value='Create'>
 
-<form action = "{{ url_for('new_menu_item', restaurant_id=restaurant_id)}}" method = 'post'>
-    <p>
-        Name:
-    </p>
-    <input type='text' size='30' name='name'>
-    <input type='submit' value='Create'>
-
-</form>
+        </form>
+    </main>
+    <section>ADVERTISING</section>
+    <footer>FOOTER</footer>
+    <header>CREATE NEW RESTAURANT</header>
+  </div>
 </body>
 </html>
