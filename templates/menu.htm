@@ -18,10 +18,7 @@ items
   <div class="grid-container">
     <span id="logo"><a href="{{ url_for('all_restaurants') }}">LOGO</a></span>
     <nav>NAVIGATION</nav>
-    <aside>ASIDE</aside>
-    <main>
-
-{% with messages = get_flashed_messages() %}
+    <aside>{% with messages = get_flashed_messages() %}
 {% if messages %}
 
 <ul>
@@ -30,7 +27,8 @@ items
     {% endfor %}
 </ul>
 {% endif %}
-{% endwith %}
+{% endwith %}</aside>
+    <main>
 
 <P> <a href="{{url_for('new_menu_item', restaurant_id = restaurant.id)}}"> ADD NEW MENU ITEM </a> </p>
 

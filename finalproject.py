@@ -90,6 +90,7 @@ def edit_restaurant(restaurant_id):
         target_row = sheet_r.find(restaurant.id).row
         sheet_r.update_cell(target_row, 1, value=request.form['name'])
         sheet_time.update_cell(1, 1, round(time_stamp))
+        flash(f"Edited {restaurant.name}!")
 
         with shelve.open("database") as db:
             db[restaurant.id] = GRestaurant(request.form['name'], restaurant_id)
@@ -114,6 +115,7 @@ def delete_restaurant(restaurant_id):
         target_row = sheet_r.find(restaurant.id).row
         sheet_r.delete_row(target_row)
         sheet_time.update_cell(1, 1, round(time_stamp))
+        flash(f"Deleted {restaurant.name}!")
 
         with shelve.open("database") as db:
             del db[restaurant.id]
@@ -141,6 +143,7 @@ def new_restaurant():
 
         sheet_r.append_row([request.form["name"], new_id])
         sheet_time.update_cell(1, 1, time_stamp)
+        flash(f"Created new restaurant ({request.form['name']})!")
 
         with shelve.open("database") as db:
             db[new_id] = GRestaurant(request.form["name"], new_id)
@@ -180,6 +183,7 @@ def new_menu_item(restaurant_id):
                             new_menu_item.restaurant_id])
 
         sheet_time.update_cell(1, 1, time_stamp)
+        flash(f"Created new menu item for {restaurant.name} ({new_menu_item.name})!")
 
         with shelve.open("database") as db:
             db[new_id] = new_menu_item
@@ -210,6 +214,7 @@ def edit_menu_item(restaurant_id, menu_id):
                             request.form["description"],
                             restaurant_id])
         sheet_time.update_cell(1, 1, time_stamp)
+        flash(f"Edited menu item in {restaurant.name} ({request.form['name']})!")
 
         with shelve.open("database") as db:
             db[menu_id] = GMenu_Item(request.form["name"],
@@ -240,6 +245,7 @@ def delete_menu_item(restaurant_id, menu_id):
         target_row = sheet_m.find(menu_id).row
         sheet_m.delete_row(target_row)
         sheet_time.update_cell(1, 1, time_stamp)
+        flash(f"Deleted {restaurant.name} menu item ({menu_item.name})!")
 
         with shelve.open("database") as db:
             del db[menu_id]
@@ -248,6 +254,18 @@ def delete_menu_item(restaurant_id, menu_id):
         return redirect(url_for("restaurant_menu", restaurant_id=restaurant_id))
     else:
         return render_template("deletemenuitem.html", restaurant=restaurant, menu_item=menu_item)
+
+@app.route("/restaurants/JSON/")
+def all_restaurants_JSON():
+    global local_db
+
+    restaurants = []
+
+    for key in local_db.keys():
+        if 'restaurantid' in key:
+            restaurants.append(local_db[key])
+
+    return jsonify(restaurants=[r.serialize for r in restaurants])
 
 @app.route("/restaurant/<restaurant_id>/JSON/")
 def restaurant_menu_JSON(restaurant_id):

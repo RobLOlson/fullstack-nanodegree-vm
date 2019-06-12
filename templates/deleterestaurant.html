@@ -12,7 +12,16 @@
   <div class="grid-container">
     <span id="logo"><a href=" {{ url_for("all_restaurants") }} ">LOGO</a></span>
     <nav>NAVIGATION</nav>
-    <aside>ASIDE</aside>
+    <aside>{% with messages = get_flashed_messages() %}
+{% if messages %}
+
+<ul>
+    {% for message in messages %}
+        <li> <strong> {{ message }} </strong> </li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}</aside>
     <main>
         <form action=" {{ url_for('delete_restaurant', restaurant_id=restaurant.id) }} " method="POST">
             Are you SURE you want to delete {{restaurant.name}}? <br/>

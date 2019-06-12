@@ -12,7 +12,16 @@
   <div class="grid-container">
     <span id="logo">LOGO</span>
     <nav>NAVIGATION</nav>
-    <aside>ASIDE</aside>
+    <aside>{% with messages = get_flashed_messages() %}
+{% if messages %}
+
+<ul>
+    {% for message in messages %}
+        <li> <strong> {{ message }} </strong> </li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}</aside>
     <main style="display: flex; flex-direction: column;">
         <a href="{{ url_for("new_restaurant") }}"><button>Create New Restaurant</button></a><br/>
 
