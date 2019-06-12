@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+  <title>ALL the Restaurants</title>
+</head>
+<body>
+  <div class="grid-container">
+    <span id="logo">LOGO</span>
+    <nav>NAVIGATION</nav>
+    <aside>ASIDE</aside>
+    <main style="display: flex; flex-direction: column;">
+        <a href="{{ url_for("new_restaurant") }}"><button>Create New Restaurant</button></a><br/>
+
+        <ul style="list-style-type:none; display:flexbox; flex-direction:vertical;">
+        {% for key in local_db.keys() %}
+            {% if "restaurant" in key %}
+                <li style="border: 1px dotted white;">
+                    <a href="{{ url_for('restaurant_menu', restaurant_id=local_db[key].id)}}">{{ local_db[key].name }}</a> <a href=" {{ url_for("edit_restaurant", restaurant_id=local_db[key].id) }} "><button type="button" style='justify-content:center;'>EDIT</button></a><a href=" {{ url_for("delete_restaurant", restaurant_id=local_db[key].id) }} "><button>DELETE</button></a>
+                    <br/>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+    </main>
+    <section>ADVERTISING</section>
+    <footer>FOOTER</footer>
+    <header>HEADER</header>
+  </div>
+</body>
+</html>

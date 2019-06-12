@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 app = Flask(__name__)
 
 
@@ -33,6 +33,13 @@ class GRestaurant(object):
         self.name = name
         self.id = id
 
+    @property
+    def serialize(self):
+        #Returns object data in easily serializeable format
+        return {
+            'name' : self.name,
+            'id' : self.id
+        }
 
 class GMenu_Item(object):
     def __init__(self, name, id, price="", description="", restaurant_id=0):
@@ -42,6 +49,16 @@ class GMenu_Item(object):
         self.description = description
         self.restaurant_id = restaurant_id
 
+    @property
+    def serialize(self):
+        #Returns easily serializeable dictionary
+        return {
+            'name' : self.name,
+            'description' : self.description,
+            'id' : self.id,
+            'price' : self.price,
+            'restaurant_id' : self.restaurant_id
+        }
 
 @app.route('/')
 @app.route('/restaurants/')
@@ -55,7 +72,7 @@ def all_restaurants():
 
     return output
 
-
+@app.route('/restaurant/<restaurant_id>/')
 @app.route('/restaurant/<restaurant_id>/menu/')
 def restaurantMenu(restaurant_id):
     global r_sheet
@@ -176,6 +193,33 @@ def delete_menu_item(restaurant_id, menu_id):
 # <input type='submit' value='CONFIRM DELETE'>
 # </form>
 #         """
+
+@app.route('/restaurant/<restaurant_id>/menu/JSON/')
+def restaurantMenuJSON(restaurant_id):
+    global r_sheet
+    global m_sheet
+
+    target_row = r_sheet.find(f"{restaurant_id}").row
+    restaurant_row = r_sheet.row_values(target_row)
+    restaurant = GRestaurant(*restaurant_row)
+
+    items = []
+
+    for cell in m_sheet.findall(f"{restaurant_id}"):
+        target_row = m_sheet.row_values(cell.row)
+        items.append(GMenu_Item(*target_row))
+
+    return jsonify(menu_items=[i.serialize for i in items])
+
+
+@app.route('/restaurant/<restaurant_id>/menu/<menu_id>/JSON/')
+def menu_item_JSON(restaurant_id, menu_id):
+    global m_sheet
+
+    target_row_m = m_sheet.find(f"{menu_id}").row
+    menu_item = GMenu_Item(*m_sheet.row_values(target_row_m))
+
+    return jsonify(menu_item=menu_item.serialize)
 
 if __name__ == '__main__':
     app.debug = True
