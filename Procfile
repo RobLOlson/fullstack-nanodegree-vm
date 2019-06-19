@@ -1,1 +1,1 @@
-web: py finalproject.py
+web: python finalproject.py
